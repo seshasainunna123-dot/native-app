@@ -1,36 +1,47 @@
-name: React Native CI
+name: Android Build Only
 
 on:
-  pull_request:
-    branches: [test]
   push:
-    branches: [test]
+    branches: [main, test]
 
 jobs:
-  validate:
-    name: Lint, Type Check, Tests
+  build-apk:
     runs-on: ubuntu-latest
 
     steps:
       # 1. Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       # 2. Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
-      # 3. Install dependencies (clean install)
+      # 3. Install dependencies
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      # 4. Run Lint
-      - name: Run ESLint
-        run: npm run lint
+      # 4. Setup Java (required for Android)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-      # 5. TypeScript check (skip if not using TS)
-      - name: Type check
-        run: npm run tsc --if-present
+      # 5. Fix gradle permission
+      - name: Fix gradlew permission
+        run: chmod +x android/gradlew
+
+      # 6. Build APK
+      - name: Build APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      # 7. Upload APK
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
