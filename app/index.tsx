@@ -43,7 +43,7 @@ export default function LoginScreen() {
         Animated.timing(formOpacity, { toValue: 1, duration: 700, useNativeDriver: true }),
       ]),
     ]).start();
-  }, []);
+  }, [formOpacity, logoScale, logoY, textOpacity]);
 
   const handleLogin = () => {
     setEmailError('');

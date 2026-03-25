@@ -6,7 +6,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useUser, useUserPosts } from '../../hooks/useUsers';
 import CustomButton from '../../components/ui/CustomButton';
 import PostCard from '../../components/features/PostCard';
-import { Post } from '../../services/api';
 
 export default function UserProfileScreen() {
   const router = useRouter();
@@ -55,7 +54,7 @@ export default function UserProfileScreen() {
                 </View>
 
                 <Text style={styles.postsLabel}>
-                  Author's Posts ({posts?.length ?? 0})
+                  Author&apos;s Posts ({posts?.length ?? 0})
                 </Text>
               </View>
             }

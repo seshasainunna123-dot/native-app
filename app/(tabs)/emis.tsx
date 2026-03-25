@@ -26,23 +26,6 @@ export default function EMIsScreen() {
   const { data: totalMonthly } = useTotalMonthlyEMI();
   const deleteEMI = useDeleteEMI();
 
-  const handleDelete = (emi: EMI) => {
-    Alert.alert(
-      'Delete EMI',
-      `Remove "${emi.loanName}"? This will also delete all payment records.`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            if (process.env.EXPO_OS === 'ios') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-            deleteEMI.mutate(emi.id);
-          },
-        },
-      ]
-    );
-  };
 
   const filters: { key: EMIFilter; label: string }[] = [
     { key: 'active', label: '● Active' },
