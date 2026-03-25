@@ -12,6 +12,7 @@ import {
   DEFAULT_EXPENSE_CATEGORIES,
 } from '@/types/finance';
 
+
 let db: SQLite.SQLiteDatabase | null = null;
 
 export async function getDB(): Promise<SQLite.SQLiteDatabase> {
