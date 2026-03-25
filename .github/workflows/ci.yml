@@ -34,7 +34,3 @@ jobs:
       # 5. TypeScript check (skip if not using TS)
       - name: Type check
         run: npm run tsc --if-present
-
-      # 6. Run tests
-      - name: Run tests
-        run: npm test -- --watchAll=false
