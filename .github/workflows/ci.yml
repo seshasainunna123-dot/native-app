@@ -2,9 +2,9 @@ name: React Native CI
 
 on:
   pull_request:
-    branches: [main]
+    branches: [test]
   push:
-    branches: [main]
+    branches: [test]
 
 jobs:
   validate:
