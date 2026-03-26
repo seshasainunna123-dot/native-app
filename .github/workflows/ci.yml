@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node (IMPORTANT: Node 20 for Expo)
+      # 2. Setup Node (IMPORTANT: Node 20+ for Expo)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
