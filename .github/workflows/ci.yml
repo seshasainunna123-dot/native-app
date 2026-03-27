@@ -1,4 +1,4 @@
-name: Android Build CI
+name: Native Android Build CI
 
 on:
   push:
@@ -13,11 +13,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node (IMPORTANT: Node 20+ for Expo)
+      # 2. Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '25'
+          node-version: '20' # Using a stable LTS version
 
       # 3. Install dependencies
       - name: Install dependencies
@@ -30,7 +30,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # 5. Generate debug keystore (FIX for your error)
+      # 5. Generate debug keystore
       - name: Generate debug keystore
         run: |
           mkdir -p android/app
@@ -48,7 +48,7 @@ jobs:
       - name: Fix gradlew permission
         run: chmod +x android/gradlew
 
-      # 7. Build APK (with stacktrace for debugging)
+      # 7. Build APK using standard Native CLI style (Gradle)
       - name: Build APK
         run: |
           cd android
