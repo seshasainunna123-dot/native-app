@@ -1,4 +1,4 @@
-name: Native Android Build CI
+name: Android Build CI
 
 on:
   push:
@@ -9,47 +9,63 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # 1. Checkout
+      - uses: actions/checkout@v4
 
-      # 2. Setup Node (use stable)
+      # 2. Setup Node (Node 20 required)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
+          cache: 'npm'
 
       # 3. Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      # 4. Setup Java (required for Android)
+      # 🔥 4. Cache Gradle (BIG speed boost)
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}
+
+      # 5. Setup Java
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '17'
 
-      # 5. Setup Android SDK
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      # 6. Generate debug keystore
+      - name: Generate debug keystore
+        run: |
+          cd android/app
+          keytool -genkey -v \
+            -keystore debug.keystore \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
 
-      # 6. Fix Gradle permission
+      # 7. Fix permission
       - name: Fix gradlew permission
         run: chmod +x android/gradlew
-
-      # 7. Export Node path (CRITICAL for RN CLI)
-      - name: Export Node path
-        run: echo "NODE_BINARY=$(which node)" >> $GITHUB_ENV
 
       # 8. Build APK
       - name: Build APK
         run: |
           cd android
-          export NODE_BINARY=$(which node)
-          ./gradlew assembleRelease --no-daemon --stacktrace
+          ./gradlew assembleRelease --stacktrace
 
-      # 9. Upload APK artifact
+      # 9. Upload APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
