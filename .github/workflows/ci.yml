@@ -1,25 +1,57 @@
-- name: Setup Node
-  uses: actions/setup-node@v4
-  with:
-    node-version: '20'
+name: Native Android Build CI
 
-- name: Install dependencies
-  run: npm install
+on:
+  push:
+    branches: [main, test]
 
-- name: Export Node path
-  run: echo "NODE_BINARY=$(which node)" >> $GITHUB_ENV
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
 
-- name: Setup Java
-  uses: actions/setup-java@v4
-  with:
-    distribution: 'temurin'
-    java-version: '17'
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-- name: Setup Android SDK
-  uses: android-actions/setup-android@v3
+      # 2. Setup Node (use stable)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-- name: Build APK
-  run: |
-    cd android
-    export NODE_BINARY=$(which node)
-    ./gradlew assembleRelease --stacktrace
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Setup Java (required for Android)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 5. Setup Android SDK
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # 6. Fix Gradle permission
+      - name: Fix gradlew permission
+        run: chmod +x android/gradlew
+
+      # 7. Export Node path (CRITICAL for RN CLI)
+      - name: Export Node path
+        run: echo "NODE_BINARY=$(which node)" >> $GITHUB_ENV
+
+      # 8. Build APK
+      - name: Build APK
+        run: |
+          cd android
+          export NODE_BINARY=$(which node)
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      # 9. Upload APK artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
