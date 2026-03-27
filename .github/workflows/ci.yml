@@ -1,62 +1,25 @@
-name: Native Android Build CI
+- name: Setup Node
+  uses: actions/setup-node@v4
+  with:
+    node-version: '20'
 
-on:
-  push:
-    branches: [main, test]
+- name: Install dependencies
+  run: npm install
 
-jobs:
-  build-apk:
-    runs-on: ubuntu-latest
+- name: Export Node path
+  run: echo "NODE_BINARY=$(which node)" >> $GITHUB_ENV
 
-    steps:
-      # 1. Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+- name: Setup Java
+  uses: actions/setup-java@v4
+  with:
+    distribution: 'temurin'
+    java-version: '17'
 
-      # 2. Setup Node
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20' # Using a stable LTS version
+- name: Setup Android SDK
+  uses: android-actions/setup-android@v3
 
-      # 3. Install dependencies
-      - name: Install dependencies
-        run: npm install
-
-      # 4. Setup Java (required for Android)
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      # 5. Generate debug keystore
-      - name: Generate debug keystore
-        run: |
-          mkdir -p android/app
-          keytool -genkey -v \
-            -keystore android/app/debug.keystore \
-            -storepass android \
-            -alias androiddebugkey \
-            -keypass android \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -dname "CN=Android Debug,O=Android,C=US"
-
-      # 6. Fix gradlew permission
-      - name: Fix gradlew permission
-        run: chmod +x android/gradlew
-
-      # 7. Build APK using standard Native CLI style (Gradle)
-      - name: Build APK
-        run: |
-          cd android
-          ./gradlew assembleRelease --stacktrace
-
-      # 8. Upload APK artifact
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+- name: Build APK
+  run: |
+    cd android
+    export NODE_BINARY=$(which node)
+    ./gradlew assembleRelease --stacktrace
