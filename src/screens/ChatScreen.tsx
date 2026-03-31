@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'react-native-linear-gradient';
-import { Ionicons } from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 type Message = {
@@ -129,7 +129,7 @@ export default function ChatScreen() {
         >
           {/* Header */}
           <View style={styles.header}>
-            <Pressable onPress={() => navigation.back()} style={styles.backButton}>
+            <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
               <Ionicons name="arrow-back" size={24} color="#F1F5F9" />
             </Pressable>
             <View style={styles.headerInfo}>

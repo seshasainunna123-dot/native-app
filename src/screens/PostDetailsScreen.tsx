@@ -37,7 +37,7 @@ export default function PostDetailScreen() {
         <View style={styles.header}>
           <CustomButton 
             title="← Back" 
-            onPress={() => navigation.back()} 
+            onPress={() => navigation.goBack()} 
             style={styles.backButton}
             textStyle={{ color: '#FFFFFF', fontSize: 14 }}
             variant="secondary"

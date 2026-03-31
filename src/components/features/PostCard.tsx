@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Post } from '../../services/api';
-import { useRouter } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 interface PostCardProps {
   post: Post;
@@ -10,14 +10,14 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, onPress, hideUserLink = false }: PostCardProps) {
-  const router = useRouter();
+  const navigation = useNavigation<any>();
 
   // By default, tapping a card goes to the post's detail view (its comments)
-  const handlePress = onPress ? onPress : () => router.push(`/post/${post.id}`);
+  const handlePress = onPress ? onPress : () => navigation.navigate('PostDetails', { id: post.id });
 
   // Navigate to User Profile
   const handleUserPress = () => {
-    router.push(`/user/${post.userId}`);
+    navigation.navigate('UserProfile', { id: post.userId });
   };
 
   return (

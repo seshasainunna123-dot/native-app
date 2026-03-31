@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Keyboard, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/ui/CustomButton';
 import CustomInput from '../components/ui/CustomInput';
 import { LinearGradient } from 'react-native-linear-gradient';
@@ -34,7 +34,7 @@ export default function AddPostScreen() {
       });
       
       Alert.alert('Success', 'Post created successfully!', [
-        { text: 'Awesome!', onPress: () => navigation.back() }
+        { text: 'Awesome!', onPress: () => navigation.goBack() }
       ]);
     } catch (error) {
       console.error("Failed to add post:", error);
@@ -78,7 +78,7 @@ export default function AddPostScreen() {
 
           <CustomButton 
             title="Cancel" 
-            onPress={() => navigation.back()} 
+            onPress={() => navigation.goBack()} 
             variant="secondary"
             style={styles.cancelButton}
           />

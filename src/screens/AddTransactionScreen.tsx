@@ -16,7 +16,7 @@ export default function AddTransactionScreen() {
           <Text style={styles.subtitle}>Feature coming soon...</Text>
           <CustomButton 
             title="Go Back" 
-            onPress={() => navigation.back()} 
+            onPress={() => navigation.goBack()} 
             style={styles.btn} 
           />
         </View>

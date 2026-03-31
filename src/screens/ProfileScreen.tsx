@@ -2,8 +2,8 @@ import React from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'react-native-linear-gradient';
-import { Ionicons } from 'react-native-vector-icons/Ionicons';
-import { useRouter } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 import { useUser, useUserPosts } from '@/hooks/useUsers';
 import PostCard from '@/components/features/PostCard';
 
@@ -49,7 +49,7 @@ export default function ProfileScreen() {
             </View>
 
             {user ? (
-              <Pressable style={styles.ghostButton} onPress={() => navigation.push(`/user/${CURRENT_USER_ID}`)}>
+              <Pressable style={styles.ghostButton} onPress={() => navigation.navigate('UserProfile', { id: CURRENT_USER_ID })}>
                 <Ionicons name="open-outline" size={16} color="#E2E8F0" />
                 <Text style={styles.ghostButtonText}>Open</Text>
               </Pressable>
@@ -129,7 +129,7 @@ export default function ProfileScreen() {
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionTitle}>Recent Posts</Text>
-                  <Pressable onPress={() => navigation.push(`/user/${CURRENT_USER_ID}`)}>
+                  <Pressable onPress={() => navigation.navigate('UserProfile', { id: CURRENT_USER_ID })}>
                     <Text style={styles.linkText}>View all</Text>
                   </Pressable>
                 </View>

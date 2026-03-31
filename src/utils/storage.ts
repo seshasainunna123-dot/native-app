@@ -1,6 +1,5 @@
-// Reactive key-value storage using expo-sqlite localStorage polyfill
-// Per skill guide: use this for simple settings/preferences, not large datasets
-import 'expo-sqlite/localStorage/install';
+// In-memory storage mock for Native CLI (Persistence should be added via AsyncStorage or MMKV)
+const memoryStorage: Record<string, string> = {};
 
 type Listener = () => void;
 const listeners = new Map<string, Set<Listener>>();
@@ -8,7 +7,7 @@ const listeners = new Map<string, Set<Listener>>();
 export const storage = {
   get<T>(key: string, defaultValue: T): T {
     try {
-      const value = localStorage.getItem(key);
+      const value = memoryStorage[key];
       return value ? JSON.parse(value) : defaultValue;
     } catch {
       return defaultValue;
@@ -16,7 +15,7 @@ export const storage = {
   },
 
   set<T>(key: string, value: T): void {
-    localStorage.setItem(key, JSON.stringify(value));
+    memoryStorage[key] = JSON.stringify(value);
     listeners.get(key)?.forEach((fn) => fn());
   },
 

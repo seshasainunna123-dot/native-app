@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'react-native-linear-gradient';
-import { useRouter } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../components/ui/CustomButton';
 
 export default function AddEMIScreen() {
@@ -16,7 +16,7 @@ export default function AddEMIScreen() {
           <Text style={styles.subtitle}>Feature coming soon...</Text>
           <CustomButton 
             title="Go Back" 
-            onPress={() => navigation.back()} 
+            onPress={() => navigation.goBack()} 
             style={styles.btn} 
           />
         </View>
